@@ -1,0 +1,49 @@
+body{
+    font-family: 'Noto Sans', sans-serif;
+    /* background-color: rgb(26, 41, 41); */
+}
+
+h1{
+    text-align: center;
+    margin: 1rem 0 1.68rem 0;
+    
+}
+form{
+    text-align: center; 
+    padding-top: 10px;
+}
+
+.claseFormulario{
+   margin: 5px;
+}
+
+label, button{
+    font-size: 20px;
+    color:black;
+}
+
+th, td{
+    border: 1px brown solid;
+    padding: 10px;
+}
+
+.divCentrado, table{
+    margin: 0px auto;
+    padding: 10px;
+}
+
+.claseFormulario-buttonAñadir{
+    padding: 15px;
+}
+.claseFormulario-buttonAñadir button{
+    margin-right: 10px;
+}
+
+.row{
+    padding-top: 20px;
+}
+/* 
+form, span, table, input, label, h1{
+    
+    color: ghostwhite;
+} */

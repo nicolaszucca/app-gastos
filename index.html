@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="./Resources/css/style.css">
+    <title>App Gastos</title>
+</head>
+
+<body>
+    <h1>APP</h1>
+    <div class="row">
+        <div class="col xl6 offset-xl1 l6 offset-l1 m8 offset-m2 s12">
+            <table id="transactionTable" class="col s12">
+                <tr>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                    <th>Categoria</th>
+                    <th>Eliminar</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col xl5 l5 m8 offset-m2 s12">
+            <div class="col s12 l8 offset-l2">
+                <form id="transactionForm">
+                    <div class="claseFormulario">
+                        <p>
+                            <span>Transaccion</span>
+                            <label>
+                                <input id="ingreso" name="transactionSelect" type="radio" value="Ingreso" />
+                                <span for="ingreso">Ingreso</span>
+                            </label>
+                            <label>
+                                <input id="egreso" name="transactionSelect" type="radio" value="Egreso" />
+                                <span for="egreso">Egreso</span>
+                            </label>
+                        </p>
+                    </div>
+
+                    <div class="claseFormulario">
+                        <div class="input-field">
+                            <label for="description">Descripción</label>
+                            <input id="description" type="text" class="validate" name="description">
+                        </div>
+                    </div>
+
+                    <div class="claseFormulario">
+                        <div class="input-field">
+                            <label for="monto">Monto</label>
+                            <input id="monto" data-error="wrong" type="number" class="validate" name="monto">
+                        </div>
+                    </div>
+
+                    <div class="claseFormulario">
+                        <select class="browser-default col s9" id="categoria" name="categoria">
+                            <option value="">Elija una categoria</option>
+                        </select>
+                        <div>
+                            <span for="categoria">Categoria</span>
+                        </div>
+                        <button id="addCategory" class="btn-floating waves-effect waves-light" type="button">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <button id="removeCategory" class="btn-floating waves-effect waves-light" type="button">
+                            <i class="material-icons">not_interested</i>
+                        </button>
+                    </div>
+                    <div class="claseFormulario-buttonAñadir">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Añadir
+                            <i class="material-icons right">send</i>
+                        </button>
+
+                        <button class="btn waves-effect waves-light" type="reset" for="transactionForm">Reset
+                            <i class="material-icons right">refresh</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="./Resources/js/codigoApp.js"></script>
+</body>
+
+</html>

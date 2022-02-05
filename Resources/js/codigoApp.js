@@ -10,13 +10,13 @@ form.addEventListener("submit", function (event) {
     event.preventDefault();
     if (form.transactionSelect.value && form.description.value && form.monto.value && form.categoria.value) {
         if (form.monto.value >= 0) {
-            //Creo un objeto formData que me devuelva el value de todos los inputs del form
+
             let formData = new FormData(form);
             let transactionObj = convertFormDataToTransactionObj(formData);
             saveTransactionObjLStorage(transactionObj);
             createTableWithData(transactionObj);
-            //Devolvemos el formulario al estado inicial.
             form.reset();
+
         } else {
             alert("Debes ingresar un monto mayor a 0")
         }
@@ -26,7 +26,7 @@ form.addEventListener("submit", function (event) {
 })
 
 document.addEventListener("DOMContentLoaded", function (event) {
-    saveLocalStorageCategories();
+    basicCategoriesDefoult();
     let transactionArrayObj = JSON.parse(localStorage.getItem("transactionData")) || [];
     transactionArrayObj.forEach(arrayObjElement => {
         createTableWithData(arrayObjElement);
@@ -60,7 +60,6 @@ function convertFormDataToTransactionObj(formData) {
 }
 
 function createTableWithData(transactionObj) {
-    //Ref: Cuando hacemos un getElementByID no obtenemos el HTML y lo guardamos en variable, sino que guardamos una REFERENCIA a ese codigo
     let tableRef = document.getElementById("transactionTable");
 
     let tableRowRef = tableRef.insertRow(-1);
@@ -100,15 +99,12 @@ function saveTransactionObjLStorage(transactionObj) {
 }
 
 function deleteDataFromLocalStorage(transactionRowId) {
-    //obtengo transacciones de mi base de datos
+
     let transactionObjArr = JSON.parse(localStorage.getItem("transactionData"));
     //busco el indice / la posicion de la transaccion que quiero eliminar que coincida con el transactionId que pasamos como parametro incial
     let transactionIdexInArray = transactionObjArr.findIndex(element => element.transactionId === transactionRowId);
-    //Elimino el elemento de esa posicion del array
     transactionObjArr.splice(transactionIdexInArray, 1);
-    //Convierto nuevamente a JSON para guardar en el localStorage
     let miTransactionArrayJSON = JSON.stringify(transactionObjArr);
-    //Guardo en el localStorage
     localStorage.setItem("transactionData", miTransactionArrayJSON);
 
 
@@ -116,17 +112,25 @@ function deleteDataFromLocalStorage(transactionRowId) {
 
 //Botones y categorias con su respectivo localStorage
 
-function saveLocalStorageCategories() {
-    let allCategory = JSON.parse(localStorage.getItem("Categories")) || []
-    let allCategoryJSON = JSON.stringify(allCategory);
-    localStorage.setItem("Categories", allCategoryJSON);
+function basicCategoriesDefoult() {
+    if (JSON.parse(localStorage.getItem("Categories")) === [] || JSON.parse(localStorage.getItem("Categories")) === null) {
+        let categoriesArray = [];
+        categoriesArray.push("Trabajo", "Comidas", "Salidas");
+        let categoriesArrayJSON = JSON.stringify(categoriesArray);
+        localStorage.setItem("Categories", categoriesArrayJSON);
+    }
+    else {
+        let categoriesArray = JSON.parse(localStorage.getItem("Categories"));
+        let categoriesArrayJSON = JSON.stringify(categoriesArray);
+        localStorage.setItem("Categories", categoriesArrayJSON);
+    }
     insertCategory();
 }
 
 function insertCategory() {
     let categories = JSON.parse(localStorage.getItem("Categories"));
     categories.forEach(element => {
-        let optionHtml = `<option data-NumberId="${numberId}"> ${element} </option>`;
+        let optionHtml = `<option data-numberid="${numberId}" value="${element}"> ${element} </option>`;
         selectElement.insertAdjacentHTML("beforeend", optionHtml);
         numberId++;
     })
@@ -135,7 +139,6 @@ function insertCategory() {
 //Boton que añade categorias
 addButton.addEventListener("click", () => {
     let categoryUser = prompt("¿Qué categoria deseas agregar?");
-    //validacion del campo
     if (categoryUser === "" || categoryUser === null || categoryUser === " ") {
         alert("Debes ingresar una categoria")
     }
@@ -144,45 +147,57 @@ addButton.addEventListener("click", () => {
     }
 });
 
-//añado categorias
+//Funcion que añade categorias
 function AddCategory(categoryUser) {
-    //recupero del local storage el array con categorias
-    let allCategory = JSON.parse(localStorage.getItem("Categories"))
-    //le hago un push con la categoria nueva del usuario al array
+    let allCategory = JSON.parse(localStorage.getItem("Categories"));
     allCategory.push(categoryUser);
-    //Al array con la categoria nueva le hago un JSON.Stringify()
     let allCategoryArrJSON = JSON.stringify(allCategory);
-    //Y guardo en el localStorage
     localStorage.setItem("Categories", allCategoryArrJSON);
-    //Pone el data-atributteID y la categoria que haya elegido el usuario en un elemento HTML y lo inserta en la ultima fila del elemento SELECT OPTION 
-    let optionHtml = `<option data-NumberId="${numberId}"> ${categoryUser} </option>`;
+    let optionHtml = `<option data-numberid="${numberId}"value="${categoryUser}"> ${categoryUser} </option>`;
     selectElement.insertAdjacentHTML("beforeend", optionHtml);
     numberId++;
-
 }
 
-//Boton elimina categorias
+
+
+//Boton que elimina categorias
 deleteButton.addEventListener("click", () => {
     let categoriesArray = JSON.parse(localStorage.getItem("Categories"));
 
     for (elements in categoriesArray) {
         alert(`Para esta Categoria: ${categoriesArray[elements]}\n
-        indice: ${elements} `);
+            indice: ${elements} `);
     }
 
-    let deleteElement = prompt("¿Qué elemento desesas eliminar? Ingresa su indice");
+    let deleteElement = prompt("Ingrese el indice de la categoria que desea eliminar:");
 
-    if (deleteElement === "" || deleteElement === null || deleteElement === " ") {
-        alert("Debes ingresar el indice del elemento que quieras eliminar");
+    if (deleteElement == 0 || deleteElement == 1 || deleteElement == 2 ||
+        deleteElement === "" || deleteElement === null || deleteElement === " ") {
 
-    } else {
-        //ELIMINA UNA DE LAS OPCIONES DE LAS CATEGORIAS
+        alert("No puedes eliminar esas categorias");
+    }
+
+    else {
+        //Elimino la categoria seleccionada segun su posicion en el array y su data-attribute
         categoriesArray.splice(deleteElement, 1);
         let categoriesArrayJSON = JSON.stringify(categoriesArray);
         localStorage.setItem("Categories", categoriesArrayJSON);
-        let deleteHtmlElement = document.querySelector(`[data-NumberId="${deleteElement}"]`);
-        deleteHtmlElement.remove();
+        deleteAndRefresHtmlCategories();
     }
 })
 
-
+//Elimino las categorias de HTML y las ingreso nuevamente sin la categoria eliminada
+//Se actualizan los numberId a las categorias
+function deleteAndRefresHtmlCategories() {
+    numberId = 0;
+    let categoriesArray = JSON.parse(localStorage.getItem("Categories"));
+    for (i = 0; i <= categoriesArray.length; i++) {
+        let deleteOption = document.querySelector(`[data-numberid="${i}"]`);
+        deleteOption.remove();
+    }
+    categoriesArray.forEach(element => {
+        let optionHtml = `<option data-numberid="${numberId}" value="${element}"> ${element} </option>`;
+        selectElement.insertAdjacentHTML("beforeend", optionHtml);
+        numberId++;
+    })
+}
